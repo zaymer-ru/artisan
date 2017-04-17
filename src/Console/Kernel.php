@@ -27,6 +27,12 @@ class Kernel extends ConsoleKernel
         if (file_exists($configFile)) {
             $config = require_once $configFile;
             $this->commands = array_merge($this->commands, $config['commands']);
+
+            if (array_key_exists('bindings', $config)) {
+                foreach ($config['bindings'] as $abstract => $concrete) {
+                    $app->bind($abstract, $concrete);
+                }
+            }
         }
 
         parent::__construct($app, $events);
